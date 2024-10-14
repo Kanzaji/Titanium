@@ -58,6 +58,7 @@ public class RedstoneManager<T extends IEnumValues<T> & IRedstoneAction> impleme
         CompoundTag value = new CompoundTag();
         value.putString("Name", action.getName());
         value.putBoolean("LastState", lastRedstoneState);
+        value.putBoolean("ShouldWork", shouldWork);
         return value;
     }
 
@@ -65,6 +66,7 @@ public class RedstoneManager<T extends IEnumValues<T> & IRedstoneAction> impleme
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         this.action = this.action.getValue(nbt.getString("Name"));
         this.lastRedstoneState = nbt.getBoolean("LastState");
+        this.shouldWork = nbt.getBoolean("ShouldWork");
     }
 
 }
