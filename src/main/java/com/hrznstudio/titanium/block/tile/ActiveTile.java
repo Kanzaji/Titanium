@@ -225,18 +225,14 @@ public abstract class ActiveTile<T extends ActiveTile<T>> extends BasicTile<T> i
         if (level.getGameTime() % getFacingHandlerWorkTime() == 0) {
             if (multiInventoryComponent != null) {
                 for (InventoryComponent<T> inventoryHandler : multiInventoryComponent.getInventoryHandlers()) {
-                    if (inventoryHandler instanceof IFacingComponent) {
-                        if (((IFacingComponent) inventoryHandler).work(this.level, this.worldPosition, this.getFacingDirection(), getFacingHandlerWorkAmount()))
-                            break;
-                    }
+                    if (inventoryHandler instanceof IFacingComponent)
+                        ((IFacingComponent) inventoryHandler).work(this.level, this.worldPosition, this.getFacingDirection(), getFacingHandlerWorkAmount());
                 }
             }
             if (multiTankComponent != null) {
                 for (FluidTankComponent<T> tank : multiTankComponent.getTanks()) {
-                    if (tank instanceof IFacingComponent) {
-                        if (((IFacingComponent) tank).work(this.level, this.worldPosition, this.getFacingDirection(), getFacingHandlerWorkAmount()))
-                            break;
-                    }
+                    if (tank instanceof IFacingComponent)
+                        ((IFacingComponent) tank).work(this.level, this.worldPosition, this.getFacingDirection(), getFacingHandlerWorkAmount());
                 }
             }
         }

@@ -207,8 +207,15 @@ public class SidedInventoryComponent<T extends IComponentHarness> extends Invent
         ItemStack extracted = from.extractItem(slot, workAmount, true);
         int outSlot = isValidForAnySlot(to, extracted);
         if (!extracted.isEmpty() && outSlot != -1) {
-            ItemStack returned = to.insertItem(outSlot, extracted, false);
-            return !from.extractItem(slot, extracted.getCount() - returned.getCount(), false).isEmpty();
+            int returnCount = extracted.getCount();
+
+            do {
+                extracted.setCount(to.insertItem(outSlot, extracted.copy(), false).getCount());
+                outSlot = isValidForAnySlot(to, extracted);
+                if (outSlot == -1) break;
+            } while (!extracted.isEmpty());
+
+            return !from.extractItem(slot, returnCount - extracted.getCount(), false).isEmpty();
         }
         slotCache.put(sideness, getNextSlot(from, slot + 1));
         return false;
@@ -217,8 +224,9 @@ public class SidedInventoryComponent<T extends IComponentHarness> extends Invent
     private int isValidForAnySlot(IItemHandler dest, ItemStack stack) {
         for (int i = 0; i < dest.getSlots(); i++) {
             if (!dest.isItemValid(i, stack)) continue;
-            if (dest.getStackInSlot(i).isEmpty()) return i;
-            if (ItemStack.isSameItemSameComponents(dest.getStackInSlot(i), stack) && dest.getStackInSlot(i).getCount() < dest.getSlotLimit(i)) {
+            ItemStack slotStack = dest.getStackInSlot(i);
+            if (slotStack.isEmpty()) return i;
+            if (ItemStack.isSameItemSameComponents(slotStack, stack) && slotStack.getCount() < Math.min(slotStack.getMaxStackSize(), dest.getSlotLimit(i))) {
                 return i;
             }
         }
