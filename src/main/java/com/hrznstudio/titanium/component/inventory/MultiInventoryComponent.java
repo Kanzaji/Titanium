@@ -138,8 +138,9 @@ public class MultiInventoryComponent<T extends IComponentHarness> implements ISc
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             InventoryComponent<T> handler = getFromSlot(slot);
             if (handler != null) {
-                if (handler.getInsertPredicate().test(stack, slot)) {
-                    return handler.insertItem(getRelativeSlot(handler, slot), stack, simulate);
+                int relativeSlot = getRelativeSlot(handler, slot);
+                if (handler.getInsertPredicate().test(stack, relativeSlot)) {
+                    return handler.insertItem(relativeSlot, stack, simulate);
                 } else {
                     return stack;
                 }
